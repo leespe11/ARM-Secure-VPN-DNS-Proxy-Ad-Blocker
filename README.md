@@ -4,7 +4,7 @@ Download Repository
 ```
 git clone git@github.com:leespe11/rpi-nginx-website-moniting.git
 ````
-Change the configuration to your requirements: **config.env**
+Change the configuration of **config.env** based on your requirments
 
 Execute permissions for run script
 ```
@@ -23,6 +23,11 @@ DNSSEC is enabled by default
 This Pihole instance supports DNS over HTTPS (DoH) or DNS over TLS (DoT)
 
 The dns service is running on port **53**
+
+To access the PiHole admin Web interface:
+```
+http://ip_address/admin
+```
 ### Squid & Privoxy
 More information about this service can be credited here: [synopsis8/squid-privoxy](https://github.com/synopsis8/squid-privoxy)
 
