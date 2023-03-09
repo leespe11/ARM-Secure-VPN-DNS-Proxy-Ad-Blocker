@@ -1,4 +1,4 @@
-# DNS Security && VPN
+# DNS Security & Wireguard VPN
 ## Install
 Download Repository
 ```
@@ -23,9 +23,12 @@ This Pihole instance supports DNS over HTTPS (DoH) or DNS over TLS (DoT)
 
 The dns service is running on port 53
 ### Squid & Privoxy
-More information about this service can be credited here: [squid-privoxy](https://github.com/synopsis8/squid-privoxy)
+More information about this service can be credited here: [synopsis8/squid-privoxy](https://github.com/synopsis8/squid-privoxy)
 To connect to the proxy service use port 3218
 ```
 ip_address:3218
 ```
 
+### Wireguard Vpn
+More information about this service can be credited here: [Wireguard](https://hub.docker.com/r/linuxserver/wireguard)
+Basic Command cheat sheet:
