@@ -16,16 +16,16 @@ Start the service
 ```
 ### PiHole & Unbound DNS
 More information about these services can be credited here:
-⋅⋅* [Pihole](https://hub.docker.com/r/pihole/pihole)
-⋅⋅* [klutchell/unbound](https://hub.docker.com/r/klutchell/unbound)
+--* [Pihole](https://hub.docker.com/r/pihole/pihole)
+--* [klutchell/unbound](https://hub.docker.com/r/klutchell/unbound)
 
 DNSSEC is enabled by default
 This Pihole instance supports DNS over HTTPS (DoH) or DNS over TLS (DoT)
 
-The dns service is running on port 53
+The dns service is running on port **53**
 ### Squid & Privoxy
 More information about this service can be credited here: [synopsis8/squid-privoxy](https://github.com/synopsis8/squid-privoxy)
-To connect to the proxy service use port 3218
+To connect to the proxy service use port **3218**
 ```
 ip_address:3218
 ```
