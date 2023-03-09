@@ -1,0 +1,18 @@
+#synopsis8/squid-privoxy
+FROM alpine:latest
+
+RUN apk --no-cache --update add privoxy squid ca-certificates && \
+    ln -sf /dev/stdout /var/log/privoxy/logfile && \
+    mkdir -p /var/cache/squid /var/log/squid
+
+RUN chown -R squid:squid /var/cache/squid && \
+    chown -R squid:squid /var/log/squid && \
+    chown privoxy:privoxy /etc/privoxy/*
+
+COPY squid_privoxy_service/privoxy /etc/privoxy
+COPY squid_privoxy_service/squid /etc/squid
+COPY squid_privoxy_service /opt
+
+EXPOSE 3128 3129
+
+CMD ["/bin/sh", "/opt/start.sh"]

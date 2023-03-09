@@ -1,0 +1,44 @@
+#!/bin/bash
+#### INFO
+
+echo "[INFO] Checking if package wireguard-tools exists"
+PKG=$(dpkg-query -W --showformat='${Status}\n' wireguard-tools|grep "install ok installed")
+if [[ "" ==  $PKG ]]; then
+	echo "[INFO Installing wireguard-tools]"
+	sudo apt-get update && sudo apt-get install --yes wireguard-tools
+else
+	echo "[INFO] Found package wireguard-tools"
+fi
+
+## Workaround for a known issue with docker and libseccomp
+echo "[INFO] Checking if package libseccomp2 exists"
+PKG=$(dpkg-query -W --showformat='${Status}\n' libseccomp2|grep "install ok installed")
+if [[ "" ==  $PKG ]]; then
+	#Intall package from distro just incase of missing dependencies 
+	sudo apt-get update && sudo apt-get install --yes libseccomp2
+else
+	echo "[INFO] Found package libseccomp2"
+fi
+
+version_num=$(dpkg-query --showformat='${Version}' --show libseccomp2);
+echo "[INFO] Checking if existing libseccomp2 is compatible with wireguard-tools"
+if (( $(echo "${version_num:0:5} 2.5.4" | awk '{print ($1 >= $2)}') )); then 
+	echo "[INFO] Existing libseccomp2 is compatible with wireguard-tools"
+else
+	echo "[INFO] Installing compatible libseccomp2 version for wireguard-tools"
+	curl -sLO "http://ftp.debian.org/debian/pool/main/libs/libseccomp/libseccomp2_2.5.4-1+b3_armhf.deb" && dpkg -i libseccomp2_2.5.4-1+b3_armhf.deb
+fi
+
+echo "[INFO] Loading environmental variables"
+set -a
+source config.env
+PWD=$(pwd)
+
+echo "[INFO] Starting Docker Environment"
+docker-compose up -d --force-recreate
+
+# workaround for https://github.com/pi-hole/docker-pi-hole/issues/610#issuecomment-922832145
+echo "[INFO] Done starting containers"
+echo "[INFO] Sleeping 10s before changing pihole permissions"
+sleep 10
+docker exec pihole /bin/bash -c "chmod 755 -R /etc/pihole/ /etc/dnsmasq.d && chown -R root.pihole /etc/pihole/ /etc/dnsmasq.d;"
