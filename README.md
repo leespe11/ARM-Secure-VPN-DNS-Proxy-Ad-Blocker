@@ -16,8 +16,8 @@ Start the service
 ```
 ### PiHole & Unbound DNS
 More information about these services can be credited here:
-⋅⋅*1. [Pihole](https://hub.docker.com/r/pihole/pihole)
-⋅⋅*1. [klutchell/unbound](https://hub.docker.com/r/klutchell/unbound)
+⋅⋅* [Pihole](https://hub.docker.com/r/pihole/pihole)
+⋅⋅* [klutchell/unbound](https://hub.docker.com/r/klutchell/unbound)
 
 DNSSEC is enabled by default
 This Pihole instance supports DNS over HTTPS (DoH) or DNS over TLS (DoT)
