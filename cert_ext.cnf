@@ -1,0 +1,11 @@
+[req]
+default_bit = 2048
+distinguished_name = PiHole
+prompt = no
+
+[req_distinguished_name]
+countryName             = CA
+stateOrProvinceName     = Ontario
+localityName            = Toronto
+organizationName        = LocalPiHole
+commonName              = localhost
