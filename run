@@ -32,7 +32,6 @@ fi
 echo "[INFO] Loading environmental variables"
 set -a
 source config.env
-PWD=$(pwd)
 
 echo "[INFO] Starting Docker Environment"
 docker-compose up -d --force-recreate
