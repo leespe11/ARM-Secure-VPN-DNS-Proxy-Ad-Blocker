@@ -3,12 +3,17 @@ version: "3"
 services:
   pihole:
     container_name: pihole
-    image: pihole/pihole:latest
+    build:
+      context: .
+      dockerfile: Dockerfile-pihole
+    image: pihole/pihole:latest_https
+    #image: pihole/pihole:latest
     ports:
       - "53:53/tcp"
       - "53:53/udp"
       - "${HTTP_PORT}:80/tcp"
-      ${HTTPS_PORT}
+      ## Placeholder HTTPS port
+      - "8443:8443/tcp"
     environment:
       TZ: ${TZ}
       WEBPASSWORD: ${PIHOLE_WEBPASSWORD}
@@ -18,7 +23,8 @@ services:
       PIHOLE_DNS_: '172.28.2.3'
       DNSSEC: 'true'
       WEBTHEME: 'default-dark'
-      VIRTUAL_HOST: 'pi.hole'
+      VIRTUAL_HOST: ${HOSTNAME}
+      HTTPS_PORT: ${HTTPS_PORT}
     ### https://github.com/pi-hole/docker-pi-hole  
     ### Can mount volumes, although there is a known bug where pihole start up scripts
     ### while change the permissions,users, and groups on somefiles making them inaccasable...
@@ -28,7 +34,10 @@ services:
     volumes:
       - ./etc-pihole:/etc/pihole
       - ./etc-dnsmasq.d:/etc/dnsmasq.d
-      ${HTTPS_CONFIG}
+      ## Placeholder HTTPS config
+      #- ./external.conf:/etc/lighttpd/external.conf
+      ## Placeholder HTTPS cert dir
+      - ./certs:/etc/lighttpd/certs
     restart: unless-stopped
     #cap_add:
     #  - NET_ADMIN # Required if you are using Pi-hole as your DHCP server, else not needed
