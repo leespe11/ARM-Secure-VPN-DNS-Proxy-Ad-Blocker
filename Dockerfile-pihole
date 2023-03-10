@@ -1,0 +1,18 @@
+FROM pihole/pihole:latest
+RUN echo -e '\n\
+#Loading openssl \n\
+server.modules += ( "mod_openssl" ) \n\
+\n\
+setenv.add-environment = ("fqdn" => "true") \n\
+$SERVER["socket"] == ":8443" { \n\
+	ssl.engine  = "enable" \n\
+	ssl.pemfile = "/etc/lighttpd/certs/server.pem" \n\
+	ssl.openssl.ssl-conf-cmd = ("MinProtocol" => "TLSv1.3", "Options" => "-ServerPreference") \n\
+} \n\
+# Redirect HTTP to HTTPS \n\
+$HTTP["scheme"] == "http" { \n\
+	$HTTP["host"] =~ ".*" { \n\
+		url.redirect = (".*" => "https://%0$0") \n\
+		url.redirect-code = 308 \n\
+	} \n\
+}' >> /etc/lighttpd/lighttpd.conf
