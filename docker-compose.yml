@@ -121,10 +121,10 @@ volumes:
     driver_opts:
        o: bind
        type: none
-       device: ${PWD}/pihole-config
+       device: ${PWD}/data/pihole-config
   dnsmasq:
     driver: local
     driver_opts:
        o: bind
        type: none
-       device: ${PWD}/dnsmasq-config
+       device: ${PWD}/data/dnsmasq-config
