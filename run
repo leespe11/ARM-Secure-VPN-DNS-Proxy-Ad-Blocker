@@ -28,16 +28,90 @@ else
 	echo "[INFO] Installing compatible libseccomp2 version for wireguard-tools"
 	curl -sLO "http://ftp.debian.org/debian/pool/main/libs/libseccomp/libseccomp2_2.5.4-1+b3_armhf.deb" && dpkg -i libseccomp2_2.5.4-1+b3_armhf.deb
 fi
+echo "[INFO] Checking if ./data directory exist"
+if [ -d "./data" ];then
+	echo "[INFO] Directory ./data exists!"
+else 
+	echo "[WARN] Directory ./data not found"
+	echo "[INFO] Creating: ./data"
+	mkdir ./data
+fi
 
 echo "[INFO] Loading environmental variables"
 set -a
 source config.env
+PWD=$(pwd)
+
+if [[ $(echo $ENABLE_HTTPS | awk '{print tolower($0)}') == "true" ]]; then
+	###
+	### https://www.golinuxcloud.com/shell-script-to-generate-certificate-openssl/
+	###
+	echo "[INFO] Checking if ./certs directory exist"
+	if [ -d "./certs" ];then
+		echo "[INFO] Directory ./certs exists!"
+	else 
+		echo "[WARN] Directory ./certs not found"
+		echo "[INFO] Creating: ./certs"
+		mkdir ./certs
+	fi
+
+    
+	CERT_PATH="data/certs"
+	SERVER_KEY="$CERT_PATH/server.key"
+	SERVER_CSR="$CERT_PATH/server.csr"
+	SERVER_CRT="$CERT_PATH/server.crt"
+	EXTFILE="config/cert_ext.cnf"
+	OPENSSL_CMD="/usr/bin/openssl"
+	
+	if [ ! -f $SERVER_KEY ] && [ ! -f $SERVER_CSR ] && [ ! -f $SERVER_CRT ]; then 
+		# generating server key
+		echo "Generating private key"
+		$OPENSSL_CMD genrsa -out $SERVER_KEY  4096 2>/dev/null
+		if [ $? -ne 0 ] ; then
+		   echo "ERROR: Failed to generate $SERVER_KEY"
+		   exit 1
+		fi
+
+		## Update Common Name in External File
+		sed -i 's/commonName.*/commonName              = '"${HOSTNAME}"'/' ./cert_ext.cnf
+		#/bin/echo "commonName              = $COMMON_NAME" >> $EXTFILE
+
+		# Generating Certificate Signing Request using config file
+		echo "Generating Certificate Signing Request"
+		$OPENSSL_CMD req -new -key $SERVER_KEY -out $SERVER_CSR -config $EXTFILE 2>/dev/null
+		if [ $? -ne 0 ] ; then
+		   echo "ERROR: Failed to generate $SERVER_CSR"
+		   exit 1
+		fi
+
+
+		echo "Generating self signed certificate"
+		$OPENSSL_CMD x509 -req -days 3650 -in $SERVER_CSR -signkey $SERVER_KEY -out $SERVER_CRT 2>/dev/null
+		if [ $? -ne 0 ] ; then
+		   echo "ERROR: Failed to generate self-signed certificate file $SERVER_CRT"
+		fi
+		cat $SERVER_KEY $SERVER_CRT > $CERT_PATH/server.pem
+	else
+		echo "[INFO] Not creating certificates, files exists"
+	fi
+	
+	sed -i '/## Placeholder HTTPS port/{n;s/.*/      - "'"${HTTPS_PORT}"':'"${HTTPS_PORT}"'\/tcp"/}' ./docker-compose.yml
+	sed -i 's/$SERVER\["socket"\] == ":.*/$SERVER\["socket"\] == ":'"${HTTPS_PORT}"'" { \\n\\/' ./config/Dockerfile-pihole
+	sed -i '/## Placeholder HTTPS cert dir/{n;s/.*/      - .\/data\/certs:\/etc\/lighttpd\/certs/}' ./config/docker-compose.yml
+	###
+	###
+	###
+else
+	sed -i '/## Placeholder HTTPS port/{n;s/.*/      ##/}' ./docker-compose.yml
+	sed -i '/## Placeholder HTTPS cert dir/{n;s/.*/      ##/}' ./docker-compose.yml
+fi
 
 echo "[INFO] Starting Docker Environment"
 docker-compose up -d --force-recreate
 
 # workaround for https://github.com/pi-hole/docker-pi-hole/issues/610#issuecomment-922832145
 echo "[INFO] Done starting containers"
+
 echo "[INFO] Sleeping 10s before changing pihole permissions"
 sleep 10
 docker exec pihole /bin/bash -c "chmod 755 -R /etc/pihole/ /etc/dnsmasq.d && chown -R root.pihole /etc/pihole/ /etc/dnsmasq.d;"
