@@ -1,5 +1,5 @@
 [req]
-default_bit = 2048
+default_bit = 4096
 distinguished_name = req_distinguished_name
 prompt = no
 
