@@ -116,15 +116,3 @@ networks:
 volumes:
   wireguard_config:
     driver: local
-  pihole:
-    driver: local
-    driver_opts:
-       o: bind
-       type: none
-       device: ${PWD}/data/pihole-config
-  dnsmasq:
-    driver: local
-    driver_opts:
-       o: bind
-       type: none
-       device: ${PWD}/data/dnsmasq-config

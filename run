@@ -97,7 +97,7 @@ if [[ $(echo $ENABLE_HTTPS | awk '{print tolower($0)}') == "true" ]]; then
 	
 	sed -i '/## Placeholder HTTPS port/{n;s/.*/      - "'"${HTTPS_PORT}"':'"${HTTPS_PORT}"'\/tcp"/}' ./docker-compose.yml
 	sed -i 's/$SERVER\["socket"\] == ":.*/$SERVER\["socket"\] == ":'"${HTTPS_PORT}"'" { \\n\\/' ./config/Dockerfile-pihole
-	sed -i '/## Placeholder HTTPS cert dir/{n;s/.*/      - .\/data\/certs:\/etc\/lighttpd\/certs/}' ./config/docker-compose.yml
+	sed -i '/## Placeholder HTTPS cert dir/{n;s/.*/      - .\/data\/certs:\/etc\/lighttpd\/certs/}' ./docker-compose.yml
 	###
 	###
 	###
