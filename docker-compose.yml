@@ -32,12 +32,10 @@ services:
     ### In the case server has a scheduled reboot regularly, all the following line to your cron job a few minites after the scheduled reboot: 
     ### docker exec pihole /bin/bash -c "chmod 755 -R /etc/pihole/ /etc/dnsmasq.d && chown -R root.pihole /etc/pihole/ /etc/dnsmasq.d;"
     volumes:
-      - ./etc-pihole:/etc/pihole
-      - ./etc-dnsmasq.d:/etc/dnsmasq.d
-      ## Placeholder HTTPS config
-      #- ./external.conf:/etc/lighttpd/external.conf
+      - ./data/etc-pihole:/etc/pihole
+      - ./data/etc-dnsmasq.d:/etc/dnsmasq.d
       ## Placeholder HTTPS cert dir
-      - ./certs:/etc/lighttpd/certs
+      - ./data/certs:/etc/lighttpd/certs
     restart: unless-stopped
     #cap_add:
     #  - NET_ADMIN # Required if you are using Pi-hole as your DHCP server, else not needed
@@ -51,7 +49,7 @@ services:
     container_name: unbound
     image: klutchell/unbound
     volumes:
-      - ./custom.conf.d:/etc/unbound/custom.conf.d
+      - ./data/custom.conf.d:/etc/unbound/custom.conf.d
     restart: unless-stopped
     networks:
       pihole-net:
@@ -97,7 +95,7 @@ services:
     image: 'squid_privoxy:local'
     dns: 172.28.2.2
     volumes:
-      - ./squid_privoxy_service/privoxy/config:/config
+      - ./data/squid_privoxy_service/privoxy/config:/config
     ports:
       - 3128:3128
       - 3129:3129
