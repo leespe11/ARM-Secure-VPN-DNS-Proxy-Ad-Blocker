@@ -4,7 +4,7 @@ services:
   pihole:
     container_name: pihole
     build:
-      context: .
+      context: ./config
       dockerfile: Dockerfile-pihole
     image: pihole/pihole:latest_https
     #image: pihole/pihole:latest
@@ -90,7 +90,7 @@ services:
   squid_privoxy:
     container_name: squid_privoxy
     build:
-      context: .
+      context: ./config
       dockerfile: Dockerfile-squid-privoxy
     image: 'squid_privoxy:local'
     dns: 172.28.2.2
