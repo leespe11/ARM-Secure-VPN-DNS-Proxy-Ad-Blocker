@@ -9,9 +9,9 @@ RUN chown -R squid:squid /var/cache/squid && \
     chown -R squid:squid /var/log/squid && \
     chown privoxy:privoxy /etc/privoxy/*
 
-COPY config/squid_privoxy_service/privoxy /etc/privoxy
-COPY config/squid_privoxy_service/squid /etc/squid
-COPY config/squid_privoxy_service /opt
+COPY squid_privoxy_service/privoxy /etc/privoxy
+COPY squid_privoxy_service/squid /etc/squid
+COPY squid_privoxy_service /opt
 
 EXPOSE 3128 3129
 
