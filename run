@@ -107,7 +107,7 @@ else
 fi
 
 echo "[INFO] Starting Docker Environment"
-docker-compose up -d --force-recreate
+docker compose up -d --force-recreate --build
 
 # workaround for https://github.com/pi-hole/docker-pi-hole/issues/610#issuecomment-922832145
 echo "[INFO] Done starting containers"
