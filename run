@@ -73,7 +73,7 @@ if [[ $(echo $ENABLE_HTTPS | awk '{print tolower($0)}') == "true" ]]; then
 		fi
 
 		## Update Common Name in External File
-		sed -i 's/commonName.*/commonName              = '"${HOSTNAME}"'/' ./cert_ext.cnf
+		sed -i 's/commonName.*/commonName              = '"${HOSTNAME}"'/' ./config/cert_ext.cnf
 		#/bin/echo "commonName              = $COMMON_NAME" >> $EXTFILE
 
 		# Generating Certificate Signing Request using config file
