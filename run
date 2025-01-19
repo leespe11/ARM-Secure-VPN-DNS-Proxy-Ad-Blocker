@@ -46,20 +46,13 @@ if [[ $(echo $ENABLE_HTTPS | awk '{print tolower($0)}') == "true" ]]; then
 	###
 	### https://www.golinuxcloud.com/shell-script-to-generate-certificate-openssl/
 	###
-	echo "[INFO] Checking if ./certs directory exist"
-	if [ -d "./data" ];then
-		echo "[INFO] Directory ./data exists!"
+	echo "[INFO] Checking if ./data/certs directory exist"
+	if [ -d "./data/certs" ];then
+		echo "[INFO] Directory ./data/certs exists!"
 	else 
-		echo "[WARN] Directory ./data not found"
-		echo "[INFO] Creating: ./data"
-		mkdir ./data
-		if [ -d "./data/certs" ];then
-			echo "[INFO] Directory ./data/certs exists!"
-		else 
-			echo "[WARN] Directory ./data/certs not found"
-			echo "[INFO] Creating: ./data/certs"
-			mkdir ./data/certs
-		fi
+		echo "[WARN] Directory ./data/certs not found"
+		echo "[INFO] Creating: ./data/certs"
+		mkdir ./data/certs
 	fi
 
     
