@@ -2,7 +2,7 @@
 ## Install
 Download Repository
 ```
-git clone git@github.com:leespe11/rpi-nginx-website-moniting.git
+git clone https://github.com/leespe11/ARM-Secure-VPN-DNS-Proxy-Ad-Blocker.git
 ````
 Change the configuration of **config.env** based on your requirments
 
